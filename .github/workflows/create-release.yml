@@ -46,10 +46,9 @@ jobs:
           filename: "./${{ matrix.architecture }}.zip"
           path: "./*"
       - uses: actions/upload-artifact@v3
-        working-directory: ${{ matrix.architecture }}
         with:
           name: binaries-${{ matrix.architecture }}
-          path: ./${{ matrix.architecture }}.zip
+          path: ./${{ matrix.architecture }}/${{ matrix.architecture }}.zip
   create_release:
     name: Create Release
     needs: [publish_binaries]
