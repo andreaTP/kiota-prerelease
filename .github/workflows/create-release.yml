@@ -46,7 +46,7 @@ jobs:
           filename: "${{ matrix.architecture }}.zip"
       - uses: actions/upload-artifact@v3
         with:
-          name: binaries-${{ matrix.architecture }}
+          name: ${{ matrix.architecture }}
           path: ${{ matrix.architecture }}/${{ matrix.architecture }}.zip
   create_release:
     name: Create Release
@@ -72,4 +72,4 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           body: "Kiota PreRelease ${{ github.event.inputs.repository }}@${{ github.event.inputs.branch }}"
           files: |
-            output/binaries-*/*.zip
+            output/*.zip
