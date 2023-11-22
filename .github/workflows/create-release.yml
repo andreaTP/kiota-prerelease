@@ -71,4 +71,4 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           tag_name: ${{ steps.version.outputs.version }}
           body: "Kiota PreRelease ${{ github.event.inputs.repository }}@${{ github.event.inputs.branch }}"
-          files: "${{ matrix.architecture }}.zip"
+          files: "${{ matrix.architecture }}/${{ matrix.architecture }}.zip"
