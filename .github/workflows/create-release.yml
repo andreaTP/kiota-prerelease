@@ -3,10 +3,14 @@ name: Create a Kiota GitHub Pre Release
 on:
   workflow_dispatch:
     inputs:
-      repository:
-        description: 'Repository to release from'
+      repository-owner:
+        description: 'Repository owner to release from'
         required: true
-        default: 'microsoft/kiota'
+        default: 'microsoft'
+      repository-name:
+        description: 'Repository name to release from'
+        required: true
+        default: 'kiota'
       branch:
         description: 'Branch to release from'
         required: true
@@ -28,7 +32,7 @@ jobs:
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.branch }}
-          repository: ${{ github.event.inputs.repository }}
+          repository: ${{ github.event.inputs.repository-owner }}/${{ github.event.inputs.repository-name }}
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -55,7 +59,9 @@ jobs:
         with:
           fetch-depth: 1
           ref: ${{ github.event.inputs.branch }}
-          repository: ${{ github.event.inputs.repository }}
+          repository: ${{ github.event.inputs.repository-owner }}/${{ github.event.inputs.repository-name }}
+      - id: version
+        run: echo "version=0.0.0-pre+${{ github.event.inputs.repository-owner }}.${{ github.event.inputs.branch }}.$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - uses: actions/download-artifact@v3
         with:
           path: output
@@ -63,7 +69,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GH_PAT }}
-          tag_name: "v${{ github.sha }}"
+          tag_name: ${{ steps.version.outputs.version }}
           body: "Kiota PreRelease ${{ github.event.inputs.repository }}@${{ github.event.inputs.branch }}"
           files: |
             output/binaries-*/*.zip
