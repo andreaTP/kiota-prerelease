@@ -39,27 +39,27 @@ jobs:
           dotnet-version: 8.x
       - name: Publish ${{ matrix.architecture }}
         run: dotnet publish ./src/kiota/kiota.csproj -c Release -p:PublishSingleFile=true -r ${{ matrix.architecture }} -o ./${{ matrix.architecture }}
-      # - name: Archive Release ${{ matrix.architecture }}
-      #   uses: thedoctor0/zip-release@master
+      - name: Archive Release ${{ matrix.architecture }}
+        uses: thedoctor0/zip-release@master
+        with:
+          directory: ${{ matrix.architecture }}
+          filename: "${{ matrix.architecture }}.zip"
+      # - uses: actions/upload-artifact@v3
       #   with:
-      #     directory: ${{ matrix.architecture }}
-      #     filename: "${{ matrix.architecture }}.zip"
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.architecture }}
-          path: ${{ matrix.architecture }}
-  create_release:
-    name: Create Release
-    needs: [publish_binaries]
-    environment:
-      name: gh_releases
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-          ref: ${{ github.event.inputs.branch }}
-          repository: ${{ github.event.inputs.repository-owner }}/${{ github.event.inputs.repository-name }}
+      #     name: ${{ matrix.architecture }}
+      #     path: ${{ matrix.architecture }}
+  # create_release:
+  #   name: Create Release
+  #   needs: [publish_binaries]
+  #   environment:
+  #     name: gh_releases
+  #   runs-on: ubuntu-latest
+  #   steps:
+      # - uses: actions/checkout@v3
+      #   with:
+      #     fetch-depth: 1
+      #     ref: ${{ github.event.inputs.branch }}
+      #     repository: ${{ github.event.inputs.repository-owner }}/${{ github.event.inputs.repository-name }}
       - id: version
         run: echo "version=v0.0.0-pre+${{ github.event.inputs.repository-owner }}.${{ github.event.inputs.branch }}.$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - uses: actions/download-artifact@v3
@@ -71,5 +71,4 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           tag_name: ${{ steps.version.outputs.version }}
           body: "Kiota PreRelease ${{ github.event.inputs.repository }}@${{ github.event.inputs.branch }}"
-          files: |
-            output/*
+          files: "${{ matrix.architecture }}.zip"
