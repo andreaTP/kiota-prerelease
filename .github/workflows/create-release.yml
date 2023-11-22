@@ -25,7 +25,8 @@ jobs:
           - osx-x64
     steps:
       - uses: actions/checkout@v3
-        repository: ${{ github.event.inputs.repository }}
+        with:
+          repository: ${{ github.event.inputs.repository }}
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
