@@ -1,4 +1,4 @@
-name: Create a Kiota GitHub release
+name: Create a Kiota GitHub Pre Release
 
 on:
   workflow_dispatch:
@@ -56,6 +56,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          token: ${{ secrets.GH_PAT }}
           tag_name: "${{ github.head_ref }}.${{ github.sha }}"
           files: |
             output/binaries-*/*.zip
