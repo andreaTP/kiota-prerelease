@@ -44,27 +44,8 @@ jobs:
         with:
           directory: ${{ matrix.architecture }}
           filename: "${{ matrix.architecture }}.zip"
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ${{ matrix.architecture }}
-      #     path: ${{ matrix.architecture }}
-  # create_release:
-  #   name: Create Release
-  #   needs: [publish_binaries]
-  #   environment:
-  #     name: gh_releases
-  #   runs-on: ubuntu-latest
-  #   steps:
-      # - uses: actions/checkout@v3
-      #   with:
-      #     fetch-depth: 1
-      #     ref: ${{ github.event.inputs.branch }}
-      #     repository: ${{ github.event.inputs.repository-owner }}/${{ github.event.inputs.repository-name }}
       - id: version
         run: echo "version=v0.0.0-pre+${{ github.event.inputs.repository-owner }}.${{ github.event.inputs.branch }}.$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     path: output
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
