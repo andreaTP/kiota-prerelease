@@ -41,14 +41,13 @@ jobs:
         run: dotnet publish ./src/kiota/kiota.csproj -c Release -p:PublishSingleFile=true -r ${{ matrix.architecture }} -o ./${{ matrix.architecture }}
       - name: Archive Release ${{ matrix.architecture }}
         uses: thedoctor0/zip-release@master
-        working-directory: ${{ matrix.architecture }}
         with:
-          filename: "./${{ matrix.architecture }}.zip"
-          path: "./*"
+          directory: ${{ matrix.architecture }}
+          filename: "${{ matrix.architecture }}.zip"
       - uses: actions/upload-artifact@v3
         with:
           name: binaries-${{ matrix.architecture }}
-          path: ./${{ matrix.architecture }}/${{ matrix.architecture }}.zip
+          path: ${{ matrix.architecture }}/${{ matrix.architecture }}.zip
   create_release:
     name: Create Release
     needs: [publish_binaries]
