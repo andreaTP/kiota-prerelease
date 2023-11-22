@@ -61,7 +61,7 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
           repository: ${{ github.event.inputs.repository-owner }}/${{ github.event.inputs.repository-name }}
       - id: version
-        run: echo "version=0.0.0-pre+${{ github.event.inputs.repository-owner }}.${{ github.event.inputs.branch }}.$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo "version=v0.0.0-pre+${{ github.event.inputs.repository-owner }}.${{ github.event.inputs.branch }}.$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - uses: actions/download-artifact@v3
         with:
           path: output
